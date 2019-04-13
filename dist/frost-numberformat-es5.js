@@ -152,17 +152,6 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         return this._formatter.resolvedOptions();
       }
       /**
-       * Return an escaped string for use in RegEx.
-       * @param {string} string The string to escape.
-       * @returns {string} The escaped string.
-       */
-
-    }], [{
-      key: "_regExEscape",
-      value: function _regExEscape(string) {
-        return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-      }
-      /**
        * Return an array of supported locales.
        * @param {string|string[]} locales The locale(s) to test for support.
        * @param {object} [options] The options to use for testing support.
@@ -170,10 +159,21 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
        * @returns {string[]} An array of strings, containing matching supported locales.
        */
 
-    }, {
+    }], [{
       key: "supportedLocalesOf",
       value: function supportedLocalesOf(locales, options) {
         return Intl.NumberFormat.supportedLocalesOf(locales, options);
+      }
+      /**
+       * Return an escaped string for use in RegEx.
+       * @param {string} string The string to escape.
+       * @returns {string} The escaped string.
+       */
+
+    }, {
+      key: "_regExEscape",
+      value: function _regExEscape(string) {
+        return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
       }
     }]);
 
