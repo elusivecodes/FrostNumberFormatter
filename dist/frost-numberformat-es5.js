@@ -26,9 +26,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   function () {
     /**
      * New NumberFormat constructor.
-     * @param {string|array} [locale] The locale(s) to use for formatting.
+     * @param {string|string[]} [locale] The locale(s) to use for formatting.
      * @param {object} [options] The options to use for formatting.
-     * @param {string} [options.localeMatch] The locale matching algorithm to use.
+     * @param {string} [options.localeMatcher] The locale matching algorithm to use.
      * @param {string} [options.style] The formatting style to use.
      * @param {string} [options.currency] The currency to use in currency formatting.
      * @param {string} [options.currencyDisplay] The method for displaying currency formatting.
@@ -41,15 +41,19 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
      * @returns {NumberFormat} The new NumberFormat object.
      */
     function NumberFormat(locale, options) {
+      var _this = this;
+
       _classCallCheck(this, NumberFormat);
 
-      this.formatter = new Intl.NumberFormat(locale, options);
+      this._formatter = new Intl.NumberFormat(locale, options);
       var baseFormatter = new Intl.NumberFormat(locale);
       this._digits = new Array(10).fill().map(function (_, i) {
         return baseFormatter.format(i);
       });
+
       var digitRegex = "[".concat(this._digits.map(NumberFormat.regExEscape).join('|'), "]"),
-          parts = this.formatter.formatToParts(-10000000.1);
+          parts = this._formatter.formatToParts(-10000000.1);
+
       this._minus = parts.find(function (part) {
         return part.type === 'minusSign';
       }).value || '-';
@@ -68,38 +72,49 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
 
       numberRegex += "(?:".concat(NumberFormat.regExEscape(this._decimal)).concat(digitRegex, "+)?");
-      var regex = '^',
-          numberAdded = false,
-          minusBefore = false;
+      var regex = '',
+          numberAdded = false;
+      this._minusIndex = 1;
+      this._numberIndex = 2;
       parts.forEach(function (part) {
         if (['literal', 'currency'].includes(part.type)) {
-          regex += NumberFormat.regExEscape(part.value);
+          regex += "".concat(NumberFormat.regExEscape(part.value), "?");
         } else if (part.type === 'minusSign') {
           regex += "(".concat(NumberFormat.regExEscape(part.value), "?)");
 
-          if (!numberAdded) {
-            minusBefore = true;
+          if (numberAdded) {
+            _this._minusIndex = 2;
+            _this._numberIndex = 1;
           }
         } else if (part.type === 'integer' && !numberAdded) {
           regex += "(".concat(numberRegex, ")");
           numberAdded = true;
         }
       });
-      regex += '$';
-      this.minusIndex = minusBefore ? 1 : 2;
-      this.numberIndex = minusBefore ? 2 : 1;
-      this.regex = new RegExp(regex);
+      this._regex = new RegExp(regex);
     }
+    /**
+     * Return a formatted number string, using the locale and formatting options.
+     * @param {number} number The number to format.
+     * @returns {string} The formatted number string.
+     */
+
 
     _createClass(NumberFormat, [{
       key: "format",
       value: function format(number) {
-        return this.formatter.format(number);
+        return this._formatter.format(number);
       }
+      /**
+       * Return an array of objecs, containing the formatted number string in parts.
+       * @param {number} number The number to format.
+       * @returns {object[]} The formatted number, as an array of parts.
+       */
+
     }, {
       key: "formatToParts",
       value: function formatToParts(number) {
-        return this.formatter.formatToParts(number);
+        return this._formatter.formatToParts(number);
       }
       /**
        * Return a parsed number from a formatted number string.
@@ -110,17 +125,27 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }, {
       key: "parse",
       value: function parse(numberString) {
-        var _this = this;
+        var _this2 = this;
 
-        var match = this.regex.exec(numberString);
+        var match = this._regex.exec(numberString);
 
         if (!match) {
           throw new Error('Invalid number string');
         }
 
-        return parseFloat("".concat(match[this.minusIndex] ? '-' : '').concat(match[this.numberIndex].replace(/./g, function (match) {
-          return _this._digits.includes(match) ? _this._digits.indexOf(match) : match === _this._decimal ? '.' : '';
+        return parseFloat("".concat(match[this._minusIndex] ? '-' : '').concat(match[this._numberIndex].replace(/./g, function (match) {
+          return _this2._digits.includes(match) ? _this2._digits.indexOf(match) : match === _this2._decimal ? '.' : '';
         })));
+      }
+      /**
+       * Return an object with the locale and formatting options.
+       * @returns {object} The computed locale and formatting options.
+       */
+
+    }, {
+      key: "resolvedOptions",
+      value: function resolvedOptions() {
+        return this._formatter.resolvedOptions();
       }
       /**
        * Return an escaped string for use in RegEx.
@@ -132,6 +157,19 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       key: "regExEscape",
       value: function regExEscape(string) {
         return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      }
+      /**
+       * Return an array of supported locales.
+       * @param {string|string[]} locales The locale(s) to test for support.
+       * @param {object} [options] The options to use for testing support.
+       * @param {string} [options.localeMatcher] The locale matching algorithm to use.
+       * @returns {string[]} An array of strings, containing matching supported locales.
+       */
+
+    }, {
+      key: "supportedLocalesOf",
+      value: function supportedLocalesOf(locales, options) {
+        return Intl.NumberFormat.supportedLocalesOf(locales, options);
       }
     }]);
 

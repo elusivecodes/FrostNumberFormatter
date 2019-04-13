@@ -6,9 +6,9 @@ class NumberFormat {
 
     /**
      * New NumberFormat constructor.
-     * @param {string|array} [locale] The locale(s) to use for formatting.
+     * @param {string|string[]} [locale] The locale(s) to use for formatting.
      * @param {object} [options] The options to use for formatting.
-     * @param {string} [options.localeMatch] The locale matching algorithm to use.
+     * @param {string} [options.localeMatcher] The locale matching algorithm to use.
      * @param {string} [options.style] The formatting style to use.
      * @param {string} [options.currency] The currency to use in currency formatting.
      * @param {string} [options.currencyDisplay] The method for displaying currency formatting.
@@ -21,7 +21,7 @@ class NumberFormat {
      * @returns {NumberFormat} The new NumberFormat object.
      */
     constructor(locale, options) {
-        this.formatter = new Intl.NumberFormat(locale, options);
+        this._formatter = new Intl.NumberFormat(locale, options);
 
         const baseFormatter = new Intl.NumberFormat(locale);
 
@@ -32,7 +32,7 @@ class NumberFormat {
             );
 
         const digitRegex = `[${this._digits.map(NumberFormat.regExEscape).join('|')}]`,
-            parts = this.formatter.formatToParts(-10000000.1);
+            parts = this._formatter.formatToParts(-10000000.1);
 
         this._minus = parts.find(part => part.type === 'minusSign').value || '-';
         this._group = parts.find(part => part.type === 'group').value || '';
@@ -47,17 +47,21 @@ class NumberFormat {
 
         numberRegex += `(?:${NumberFormat.regExEscape(this._decimal)}${digitRegex}+)?`;
 
-        let regex = '^',
-            numberAdded = false,
-            minusBefore = false;
+        let regex = '',
+            numberAdded = false;
+
+        this._minusIndex = 1;
+        this._numberIndex = 2;
 
         parts.forEach(part => {
             if (['literal', 'currency'].includes(part.type)) {
-                regex += NumberFormat.regExEscape(part.value);
+                regex += `${NumberFormat.regExEscape(part.value)}?`;
             } else if (part.type === 'minusSign') {
                 regex += `(${NumberFormat.regExEscape(part.value)}?)`;
-                if (!numberAdded) {
-                    minusBefore = true;
+
+                if (numberAdded) {
+                    this._minusIndex = 2;
+                    this._numberIndex = 1;
                 }
             } else if (part.type === 'integer' && !numberAdded) {
                 regex += `(${numberRegex})`;
@@ -65,20 +69,25 @@ class NumberFormat {
             }
         });
 
-        regex += '$$';
-
-        this.minusIndex = minusBefore ? 1 : 2;
-        this.numberIndex = minusBefore ? 2 : 1;
-
-        this.regex = new RegExp(regex);
+        this._regex = new RegExp(regex);
     }
 
+    /**
+     * Return a formatted number string, using the locale and formatting options.
+     * @param {number} number The number to format.
+     * @returns {string} The formatted number string.
+     */
     format(number) {
-        return this.formatter.format(number);
+        return this._formatter.format(number);
     }
 
+    /**
+     * Return an array of objecs, containing the formatted number string in parts.
+     * @param {number} number The number to format.
+     * @returns {object[]} The formatted number, as an array of parts.
+     */
     formatToParts(number) {
-        return this.formatter.formatToParts(number);
+        return this._formatter.formatToParts(number);
     }
 
     /**
@@ -87,7 +96,7 @@ class NumberFormat {
      * @returns {number} The parsed number.
      */
     parse(numberString) {
-        const match = this.regex.exec(numberString);
+        const match = this._regex.exec(numberString);
 
         if (!match) {
             throw new Error('Invalid number string');
@@ -95,10 +104,10 @@ class NumberFormat {
 
         return parseFloat(
             `${(
-                match[this.minusIndex] ?
+                match[this._minusIndex] ?
                     '-' :
                     ''
-            )}${match[this.numberIndex].replace(
+            )}${match[this._numberIndex].replace(
                 /./g,
                 match =>
                     this._digits.includes(match) ?
@@ -111,12 +120,31 @@ class NumberFormat {
     }
 
     /**
+     * Return an object with the locale and formatting options.
+     * @returns {object} The computed locale and formatting options.
+     */
+    resolvedOptions() {
+        return this._formatter.resolvedOptions();
+    }
+
+    /**
      * Return an escaped string for use in RegEx.
      * @param {string} string The string to escape.
      * @returns {string} The escaped string.
      */
     static regExEscape(string) {
         return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$$&');
+    }
+
+    /**
+     * Return an array of supported locales.
+     * @param {string|string[]} locales The locale(s) to test for support.
+     * @param {object} [options] The options to use for testing support.
+     * @param {string} [options.localeMatcher] The locale matching algorithm to use.
+     * @returns {string[]} An array of strings, containing matching supported locales.
+     */
+    static supportedLocalesOf(locales, options) {
+        return Intl.NumberFormat.supportedLocalesOf(locales, options);
     }
 
 }
