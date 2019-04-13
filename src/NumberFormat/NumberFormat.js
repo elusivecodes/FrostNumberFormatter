@@ -128,15 +128,6 @@ class NumberFormat {
     }
 
     /**
-     * Return an escaped string for use in RegEx.
-     * @param {string} string The string to escape.
-     * @returns {string} The escaped string.
-     */
-    static _regExEscape(string) {
-        return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$$&');
-    }
-
-    /**
      * Return an array of supported locales.
      * @param {string|string[]} locales The locale(s) to test for support.
      * @param {object} [options] The options to use for testing support.
@@ -145,6 +136,15 @@ class NumberFormat {
      */
     static supportedLocalesOf(locales, options) {
         return Intl.NumberFormat.supportedLocalesOf(locales, options);
+    }
+
+    /**
+     * Return an escaped string for use in RegEx.
+     * @param {string} string The string to escape.
+     * @returns {string} The escaped string.
+     */
+    static _regExEscape(string) {
+        return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$$&');
     }
 
 }
