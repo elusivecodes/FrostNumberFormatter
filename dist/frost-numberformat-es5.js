@@ -8,6 +8,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+/**
+ * FrostNumberFormat v1.0
+ * https://github.com/elusivecodes/FrostNumberFormat
+ */
 (function (global, factory) {
   if ((typeof module === "undefined" ? "undefined" : _typeof(module)) === 'object' && _typeof(module.exports) === 'object') {
     module.exports = factory();
@@ -51,7 +55,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         return baseFormatter.format(i);
       });
 
-      var digitRegex = "[".concat(this._digits.map(NumberFormat.regExEscape).join('|'), "]"),
+      var digitRegex = "[".concat(this._digits.map(NumberFormat._regExEscape).join('|'), "]"),
           parts = this._formatter.formatToParts(-10000000.1);
 
       this._minus = parts.find(function (part) {
@@ -66,21 +70,21 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       var numberRegex = '';
 
       if (this._group) {
-        numberRegex += "(?:".concat(digitRegex, "{1,3}").concat(NumberFormat.regExEscape(this._group), ")*").concat(digitRegex, "{1,3}");
+        numberRegex += "(?:".concat(digitRegex, "{1,3}").concat(NumberFormat._regExEscape(this._group), ")*").concat(digitRegex, "{1,3}");
       } else {
         numberRegex += "".concat(digitRegex, "+");
       }
 
-      numberRegex += "(?:".concat(NumberFormat.regExEscape(this._decimal)).concat(digitRegex, "+)?");
+      numberRegex += "(?:".concat(NumberFormat._regExEscape(this._decimal)).concat(digitRegex, "+)?");
       var regex = '',
           numberAdded = false;
       this._minusIndex = 1;
       this._numberIndex = 2;
       parts.forEach(function (part) {
         if (['literal', 'currency'].includes(part.type)) {
-          regex += "".concat(NumberFormat.regExEscape(part.value), "?");
+          regex += "".concat(NumberFormat._regExEscape(part.value), "?");
         } else if (part.type === 'minusSign') {
-          regex += "(".concat(NumberFormat.regExEscape(part.value), "?)");
+          regex += "(".concat(NumberFormat._regExEscape(part.value), "?)");
 
           if (numberAdded) {
             _this._minusIndex = 2;
@@ -154,8 +158,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
        */
 
     }], [{
-      key: "regExEscape",
-      value: function regExEscape(string) {
+      key: "_regExEscape",
+      value: function _regExEscape(string) {
         return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
       }
       /**

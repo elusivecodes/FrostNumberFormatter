@@ -1,3 +1,7 @@
+/**
+ * FrostNumberFormat v1.0
+ * https://github.com/elusivecodes/FrostNumberFormat
+ */
 (function(global, factory) {
 
     if (typeof module === 'object' && typeof module.exports === 'object') {
