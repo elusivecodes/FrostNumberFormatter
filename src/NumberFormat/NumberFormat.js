@@ -82,7 +82,7 @@ class NumberFormat {
     }
 
     /**
-     * Return an array of objecs, containing the formatted number string in parts.
+     * Return an array of objects, containing the formatted number string in parts.
      * @param {number} number The number to format.
      * @returns {object[]} The formatted number, as an array of parts.
      */

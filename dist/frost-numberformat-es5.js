@@ -110,7 +110,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         return this._formatter.format(number);
       }
       /**
-       * Return an array of objecs, containing the formatted number string in parts.
+       * Return an array of objects, containing the formatted number string in parts.
        * @param {number} number The number to format.
        * @returns {object[]} The formatted number, as an array of parts.
        */

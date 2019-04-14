@@ -2,7 +2,7 @@
 
 **FrostNumberFormat** is a free, open-source number formatting library for *JavaScript*.
 
-It is a tiny (~1kb) and modern library, extending the native [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) class, with additional capabilities for parsing formatted number strings into floats.
+It is a tiny (~1kb) and modern library, extending the native [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) class, with additional capabilities for parsing formatted number strings into numbers.
 
 
 ## Table of contents
@@ -28,6 +28,8 @@ const formatter = new NumberFormat(locale, options);
 
 ## Formatting
 
+Return a formatted number string, using the locale and formatting options.
+
 - `number` is the number you wish to format.
 
 ```javascript
@@ -35,6 +37,8 @@ const numberString = formatter.format(number);
 ```
 
 #### Format To Parts
+
+Return an array of objects, containing the formatted number string in parts.
 
 - `number` is the number you wish to format.
 
@@ -44,6 +48,8 @@ const numberParts = formatter.formatToParts(number);
 
 
 ## Parsing
+
+Return a parsed number from a formatted number string.
 
 - `numberSting` is the string you wish to parse.
 
