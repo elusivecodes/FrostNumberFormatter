@@ -14,7 +14,7 @@ It is a tiny (~1kb) and modern library, extending the native [Intl.NumberFormat]
 
 ## Basic Usage
 
-Because the class internally utilizes the native [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) class, usage is very straight forward.
+As the class internally utilizes the native [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) class, usage is very straightforward.
 
 - `locale` is a string with a BCP 47 language tag, or an array of such strings, and will default to the system locale.
 - `options` is an object containing options for formatting.
