@@ -46,7 +46,7 @@
                     baseFormatter.format(i)
                 );
 
-            const digitRegex = `[${this._digits.map(NumberFormat._regExEscape).join('|')}]`,
+            const digitRegex = `[${this._digits.map(NumberFormat._regExEscape).join('')}]`,
                 parts = this._formatter.formatToParts(-10000000.1);
 
             this._minus = parts.find(part => part.type === 'minusSign').value || '-';
@@ -70,9 +70,9 @@
 
             parts.forEach(part => {
                 if (['literal', 'currency'].includes(part.type)) {
-                    regex += `${NumberFormat._regExEscape(part.value)}?`;
+                    regex += `(?:${NumberFormat._regExEscape(part.value)})?`;
                 } else if (part.type === 'minusSign') {
-                    regex += `(${NumberFormat._regExEscape(part.value)}?)`;
+                    regex += `(${NumberFormat._regExEscape(part.value)})?`;
 
                     if (numberAdded) {
                         this._minusIndex = 2;

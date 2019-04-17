@@ -55,7 +55,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         return baseFormatter.format(i);
       });
 
-      var digitRegex = "[".concat(this._digits.map(NumberFormat._regExEscape).join('|'), "]"),
+      var digitRegex = "[".concat(this._digits.map(NumberFormat._regExEscape).join(''), "]"),
           parts = this._formatter.formatToParts(-10000000.1);
 
       this._minus = parts.find(function (part) {
@@ -82,9 +82,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       this._numberIndex = 2;
       parts.forEach(function (part) {
         if (['literal', 'currency'].includes(part.type)) {
-          regex += "".concat(NumberFormat._regExEscape(part.value), "?");
+          regex += "(?:".concat(NumberFormat._regExEscape(part.value), ")?");
         } else if (part.type === 'minusSign') {
-          regex += "(".concat(NumberFormat._regExEscape(part.value), "?)");
+          regex += "(".concat(NumberFormat._regExEscape(part.value), ")?");
 
           if (numberAdded) {
             _this._minusIndex = 2;
