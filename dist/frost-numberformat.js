@@ -68,7 +68,7 @@
             this._minusIndex = 1;
             this._numberIndex = 2;
 
-            parts.forEach(part => {
+            for (const part of parts) {
                 if (['literal', 'currency'].includes(part.type)) {
                     regex += `(?:${NumberFormat._regExEscape(part.value)})?`;
                 } else if (part.type === 'minusSign') {
@@ -82,7 +82,7 @@
                     regex += `(${numberRegex})`;
                     numberAdded = true;
                 }
-            });
+            }
 
             this._regex = new RegExp(regex);
         }
