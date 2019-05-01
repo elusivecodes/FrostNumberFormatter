@@ -5,11 +5,19 @@
 It is a tiny (~1kb) and modern library, extending the native [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) class, with additional capabilities for parsing formatted number strings into numbers.
 
 
-## Table of contents
+## Table Of Contents
+- [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Formatting](#formatting)
 - [Parsing](#parsing)
 
+
+
+## Installation
+
+```html
+<script type="text/javascript" src="/path/to/frost-numberformat.min.js"></script>
+```
 
 
 ## Basic Usage

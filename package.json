@@ -1,13 +1,13 @@
 {
     "name": "frostnumberformat",
     "version": "1.0.0",
-    "description": "",
+    "description": "FrostNumberFormat is a free, open-source number formatting library for JavaScript.",
     "main": "build.js",
     "scripts": {
         "start": "node build.js",
         "test": "node test.js"
     },
-    "author": "",
+    "author": "Elusive",
     "license": "MIT",
     "devDependencies": {
         "@babel/core": "^7.4.3",
