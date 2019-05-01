@@ -44,7 +44,7 @@ Return a formatted number string, using the locale and formatting options.
 const numberString = formatter.format(number);
 ```
 
-#### Format To Parts
+**Format To Parts**
 
 Return an array of objects, containing the formatted number string in parts.
 
