@@ -47,6 +47,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
      * @returns {NumberFormat} The new NumberFormat object.
      */
     function NumberFormat(locale, options) {
+      var _this = this;
+
       _classCallCheck(this, NumberFormat);
 
       this._formatter = new Intl.NumberFormat(locale, options);
@@ -67,56 +69,27 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       this._decimal = parts.find(function (part) {
         return part.type === 'decimal';
       }).value || '.';
-      var numberRegex = '';
-
-      if (this._group) {
-        numberRegex += "(?:".concat(digitRegex, "{1,3}").concat(NumberFormat._regExEscape(this._group), ")*").concat(digitRegex, "{1,3}");
-      } else {
-        numberRegex += "".concat(digitRegex, "+");
-      }
-
-      numberRegex += "(?:".concat(NumberFormat._regExEscape(this._decimal)).concat(digitRegex, "+)?");
-      var regex = '',
-          numberAdded = false;
       this._minusIndex = 1;
       this._numberIndex = 2;
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = parts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var part = _step.value;
-
-          if (['literal', 'currency'].includes(part.type)) {
-            regex += "(?:".concat(NumberFormat._regExEscape(part.value), ")?");
-          } else if (part.type === 'minusSign') {
-            regex += "(".concat(NumberFormat._regExEscape(part.value), ")?");
-
-            if (numberAdded) {
-              this._minusIndex = 2;
-              this._numberIndex = 1;
-            }
-          } else if (part.type === 'integer' && !numberAdded) {
-            regex += "(".concat(numberRegex, ")");
-            numberAdded = true;
+      var numberAdded = false;
+      var numberRegex = (this._group ? "(?:".concat(digitRegex, "{1,3}").concat(NumberFormat._regExEscape(this._group), ")*").concat(digitRegex, "{1,3}") : "".concat(digitRegex, "+")) + "(?:".concat(NumberFormat._regExEscape(this._decimal)).concat(digitRegex, "+)?"),
+          regex = parts.reduce(function (acc, part) {
+        if (['literal', 'currency'].includes(part.type)) {
+          acc += "(?:".concat(NumberFormat._regExEscape(part.value), ")?");
+        } else if (part.type === 'minusSign') {
+          if (numberAdded) {
+            _this._minusIndex = 2;
+            _this._numberIndex = 1;
           }
+
+          acc += "(".concat(NumberFormat._regExEscape(part.value), ")?");
+        } else if (part.type === 'integer' && !numberAdded) {
+          numberAdded = true;
+          acc += "(".concat(numberRegex, ")");
         }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-            _iterator["return"]();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
 
+        return acc;
+      }, '');
       this._regex = new RegExp(regex);
     }
     /**
@@ -151,7 +124,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }, {
       key: "parse",
       value: function parse(numberString) {
-        var _this = this;
+        var _this2 = this;
 
         var match = this._regex.exec(numberString);
 
@@ -160,7 +133,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         }
 
         return parseFloat("".concat(match[this._minusIndex] ? '-' : '').concat(match[this._numberIndex].replace(/./g, function (match) {
-          return _this._digits.includes(match) ? _this._digits.indexOf(match) : match === _this._decimal ? '.' : '';
+          return _this2._digits.includes(match) ? _this2._digits.indexOf(match) : match === _this2._decimal ? '.' : '';
         })));
       }
       /**

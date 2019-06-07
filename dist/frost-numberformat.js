@@ -53,37 +53,34 @@
             this._minus = parts.find(part => part.type === 'minusSign').value || '-';
             this._group = parts.find(part => part.type === 'group').value || '';
             this._decimal = parts.find(part => part.type === 'decimal').value || '.';
-
-            let numberRegex = '';
-            if (this._group) {
-                numberRegex += `(?:${digitRegex}{1,3}${NumberFormat._regExEscape(this._group)})*${digitRegex}{1,3}`;
-            } else {
-                numberRegex += `${digitRegex}+`;
-            }
-
-            numberRegex += `(?:${NumberFormat._regExEscape(this._decimal)}${digitRegex}+)?`;
-
-            let regex = '',
-                numberAdded = false;
-
             this._minusIndex = 1;
             this._numberIndex = 2;
 
-            for (const part of parts) {
-                if (['literal', 'currency'].includes(part.type)) {
-                    regex += `(?:${NumberFormat._regExEscape(part.value)})?`;
-                } else if (part.type === 'minusSign') {
-                    regex += `(${NumberFormat._regExEscape(part.value)})?`;
+            let numberAdded = false;
 
-                    if (numberAdded) {
-                        this._minusIndex = 2;
-                        this._numberIndex = 1;
+            const numberRegex = (
+                this._group ?
+                    `(?:${digitRegex}{1,3}${NumberFormat._regExEscape(this._group)})*${digitRegex}{1,3}` :
+                    `${digitRegex}+`
+            ) + `(?:${NumberFormat._regExEscape(this._decimal)}${digitRegex}+)?`,
+                regex = parts.reduce((acc, part) => {
+                    if (['literal', 'currency'].includes(part.type)) {
+                        acc += `(?:${NumberFormat._regExEscape(part.value)})?`;
+                    } else if (part.type === 'minusSign') {
+                        if (numberAdded) {
+                            this._minusIndex = 2;
+                            this._numberIndex = 1;
+                        }
+
+                        acc += `(${NumberFormat._regExEscape(part.value)})?`;
+                    } else if (part.type === 'integer' && !numberAdded) {
+                        numberAdded = true;
+
+                        acc += `(${numberRegex})`;
                     }
-                } else if (part.type === 'integer' && !numberAdded) {
-                    regex += `(${numberRegex})`;
-                    numberAdded = true;
-                }
-            }
+
+                    return acc;
+                }, '');
 
             this._regex = new RegExp(regex);
         }
