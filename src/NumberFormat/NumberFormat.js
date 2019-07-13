@@ -31,7 +31,7 @@ class NumberFormat {
                 baseFormatter.format(i)
             );
 
-        const digitRegex = `[${this._digits.map(NumberFormat._regExEscape).join('')}]`,
+        const digitRegex = `[${this._digits.map(NumberFormat._escapeRegExp).join('')}]`,
             parts = this._formatter.formatToParts(-10000000.1);
 
         this._minus = parts.find(part => part.type === 'minusSign').value || '-';
@@ -44,19 +44,19 @@ class NumberFormat {
 
         const numberRegex = (
             this._group ?
-                `(?:${digitRegex}{1,3}${NumberFormat._regExEscape(this._group)})*${digitRegex}{1,3}` :
+                `(?:${digitRegex}{1,3}${NumberFormat._escapeRegExp(this._group)})*${digitRegex}{1,3}` :
                 `${digitRegex}+`
-        ) + `(?:${NumberFormat._regExEscape(this._decimal)}${digitRegex}+)?`,
+        ) + `(?:${NumberFormat._escapeRegExp(this._decimal)}${digitRegex}+)?`,
             regex = parts.reduce((acc, part) => {
                 if (['literal', 'currency'].includes(part.type)) {
-                    acc += `(?:${NumberFormat._regExEscape(part.value)})?`;
+                    acc += `(?:${NumberFormat._escapeRegExp(part.value)})?`;
                 } else if (part.type === 'minusSign') {
                     if (numberAdded) {
                         this._minusIndex = 2;
                         this._numberIndex = 1;
                     }
 
-                    acc += `(${NumberFormat._regExEscape(part.value)})?`;
+                    acc += `(${NumberFormat._escapeRegExp(part.value)})?`;
                 } else if (part.type === 'integer' && !numberAdded) {
                     numberAdded = true;
 
@@ -140,7 +140,7 @@ class NumberFormat {
      * @param {string} string The string to escape.
      * @returns {string} The escaped string.
      */
-    static _regExEscape(string) {
+    static _escapeRegExp(string) {
         return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$$&');
     }
 
