@@ -47,7 +47,7 @@
                     baseFormatter.format(i)
                 );
 
-            const digitRegex = `[${this._digits.map(NumberFormat._escapeRegExp).join('')}]`,
+            const digitRegExp = `[${this._digits.map(NumberFormat._escapeRegExp).join('')}]`,
                 parts = this._formatter.formatToParts(-10000000.1);
 
             this._minus = parts.find(part => part.type === 'minusSign').value || '-';
@@ -58,12 +58,12 @@
 
             let numberAdded = false;
 
-            const numberRegex = (
+            const numberRegExp = (
                 this._group ?
-                    `(?:${digitRegex}{1,3}${NumberFormat._escapeRegExp(this._group)})*${digitRegex}{1,3}` :
-                    `${digitRegex}+`
-            ) + `(?:${NumberFormat._escapeRegExp(this._decimal)}${digitRegex}+)?`,
-                regex = parts.reduce((acc, part) => {
+                    `(?:${digitRegExp}{1,3}${NumberFormat._escapeRegExp(this._group)})*${digitRegExp}{1,3}` :
+                    `${digitRegExp}+`
+            ) + `(?:${NumberFormat._escapeRegExp(this._decimal)}${digitRegExp}+)?`,
+                regExp = parts.reduce((acc, part) => {
                     if (['literal', 'currency'].includes(part.type)) {
                         acc += `(?:${NumberFormat._escapeRegExp(part.value)})?`;
                     } else if (part.type === 'minusSign') {
@@ -76,13 +76,13 @@
                     } else if (part.type === 'integer' && !numberAdded) {
                         numberAdded = true;
 
-                        acc += `(${numberRegex})`;
+                        acc += `(${numberRegExp})`;
                     }
 
                     return acc;
                 }, '');
 
-            this._regex = new RegExp(regex);
+            this._regExp = new RegExp(regExp);
         }
 
         /**
@@ -109,7 +109,7 @@
          * @returns {number} The parsed number.
          */
         parse(numberString) {
-            const match = this._regex.exec(numberString);
+            const match = this._regExp.exec(numberString);
 
             if (!match) {
                 throw new Error('Invalid number string');

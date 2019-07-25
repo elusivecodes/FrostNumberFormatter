@@ -57,7 +57,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         return baseFormatter.format(i);
       });
 
-      var digitRegex = "[".concat(this._digits.map(NumberFormat._escapeRegExp).join(''), "]"),
+      var digitRegExp = "[".concat(this._digits.map(NumberFormat._escapeRegExp).join(''), "]"),
           parts = this._formatter.formatToParts(-10000000.1);
 
       this._minus = parts.find(function (part) {
@@ -72,8 +72,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       this._minusIndex = 1;
       this._numberIndex = 2;
       var numberAdded = false;
-      var numberRegex = (this._group ? "(?:".concat(digitRegex, "{1,3}").concat(NumberFormat._escapeRegExp(this._group), ")*").concat(digitRegex, "{1,3}") : "".concat(digitRegex, "+")) + "(?:".concat(NumberFormat._escapeRegExp(this._decimal)).concat(digitRegex, "+)?"),
-          regex = parts.reduce(function (acc, part) {
+      var numberRegExp = (this._group ? "(?:".concat(digitRegExp, "{1,3}").concat(NumberFormat._escapeRegExp(this._group), ")*").concat(digitRegExp, "{1,3}") : "".concat(digitRegExp, "+")) + "(?:".concat(NumberFormat._escapeRegExp(this._decimal)).concat(digitRegExp, "+)?"),
+          regExp = parts.reduce(function (acc, part) {
         if (['literal', 'currency'].includes(part.type)) {
           acc += "(?:".concat(NumberFormat._escapeRegExp(part.value), ")?");
         } else if (part.type === 'minusSign') {
@@ -85,12 +85,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           acc += "(".concat(NumberFormat._escapeRegExp(part.value), ")?");
         } else if (part.type === 'integer' && !numberAdded) {
           numberAdded = true;
-          acc += "(".concat(numberRegex, ")");
+          acc += "(".concat(numberRegExp, ")");
         }
 
         return acc;
       }, '');
-      this._regex = new RegExp(regex);
+      this._regExp = new RegExp(regExp);
     }
     /**
      * Return a formatted number string, using the locale and formatting options.
@@ -126,7 +126,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       value: function parse(numberString) {
         var _this2 = this;
 
-        var match = this._regex.exec(numberString);
+        var match = this._regExp.exec(numberString);
 
         if (!match) {
           throw new Error('Invalid number string');
