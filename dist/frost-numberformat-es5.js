@@ -52,40 +52,88 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       _classCallCheck(this, NumberFormat);
 
       this._formatter = new Intl.NumberFormat(locale, options);
+      this._strict = options && !!options.strictMode;
+      this._minus = '-';
+      this._group = '';
+      this._decimal = '.';
+      this._minusIndex = 1;
+      this._numberIndex = 2;
+
+      var parts = this._formatter.formatToParts(-10000000.1);
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = parts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var part = _step.value;
+
+          switch (part.type) {
+            case 'minusSign':
+              this._minus = part.value;
+              break;
+
+            case 'group':
+              this._group = part.value;
+              break;
+
+            case 'decimal':
+              this._decimal = part.value;
+              break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
       var baseFormatter = new Intl.NumberFormat(locale);
       this._digits = new Array(10).fill().map(function (_, i) {
         return baseFormatter.format(i);
       });
-
-      var digitRegExp = "[".concat(this._digits.map(NumberFormat._escapeRegExp).join(''), "]"),
-          parts = this._formatter.formatToParts(-10000000.1);
-
-      this._minus = parts.find(function (part) {
-        return part.type === 'minusSign';
-      }).value || '-';
-      this._group = parts.find(function (part) {
-        return part.type === 'group';
-      }).value || '';
-      this._decimal = parts.find(function (part) {
-        return part.type === 'decimal';
-      }).value || '.';
-      this._minusIndex = 1;
-      this._numberIndex = 2;
+      var digitRegExp = "[".concat(this._digits.map(NumberFormat._escapeRegExp).join(''), "]");
+      var numberRegExp = "".concat(this._group ? "(?:".concat(digitRegExp, "{1,3}").concat(NumberFormat._escapeRegExp(this._group), ")*").concat(digitRegExp, "{1,3}") : "".concat(digitRegExp, "+"), "(?:").concat(NumberFormat._escapeRegExp(this._decimal)).concat(digitRegExp, "+)?");
       var numberAdded = false;
-      var numberRegExp = (this._group ? "(?:".concat(digitRegExp, "{1,3}").concat(NumberFormat._escapeRegExp(this._group), ")*").concat(digitRegExp, "{1,3}") : "".concat(digitRegExp, "+")) + "(?:".concat(NumberFormat._escapeRegExp(this._decimal)).concat(digitRegExp, "+)?"),
-          regExp = parts.reduce(function (acc, part) {
-        if (['literal', 'currency'].includes(part.type)) {
-          acc += "(?:".concat(NumberFormat._escapeRegExp(part.value), ")?");
-        } else if (part.type === 'minusSign') {
-          if (numberAdded) {
-            _this._minusIndex = 2;
-            _this._numberIndex = 1;
-          }
+      var regExp = parts.reduce(function (acc, part) {
+        switch (part.type) {
+          case 'literal':
+          case 'currency':
+            acc += "(?:".concat(NumberFormat._escapeRegExp(part.value), ")");
 
-          acc += "(".concat(NumberFormat._escapeRegExp(part.value), ")?");
-        } else if (part.type === 'integer' && !numberAdded) {
-          numberAdded = true;
-          acc += "(".concat(numberRegExp, ")");
+            if (!_this._strict) {
+              acc += '?';
+            }
+
+            break;
+
+          case 'minusSign':
+            acc += "(".concat(NumberFormat._escapeRegExp(part.value), ")?");
+
+            if (numberAdded) {
+              _this._minusIndex = 2;
+              _this._numberIndex = 1;
+            }
+
+            break;
+
+          case 'integer':
+            if (!numberAdded) {
+              numberAdded = true;
+              acc += "(".concat(numberRegExp, ")");
+            }
+
+            break;
         }
 
         return acc;

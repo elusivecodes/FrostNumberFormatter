@@ -23,6 +23,28 @@ class NumberFormat {
     constructor(locale, options) {
         this._formatter = new Intl.NumberFormat(locale, options);
 
+        this._strict = options && !!options.strictMode;
+        this._minus = '-';
+        this._group = '';
+        this._decimal = '.';
+        this._minusIndex = 1;
+        this._numberIndex = 2;
+
+        const parts = this._formatter.formatToParts(-10000000.1);
+        for (const part of parts) {
+            switch (part.type) {
+                case 'minusSign':
+                    this._minus = part.value;
+                    break;
+                case 'group':
+                    this._group = part.value;
+                    break;
+                case 'decimal':
+                    this._decimal = part.value;
+                    break;
+            }
+        }
+
         const baseFormatter = new Intl.NumberFormat(locale);
 
         this._digits = new Array(10)
@@ -31,40 +53,45 @@ class NumberFormat {
                 baseFormatter.format(i)
             );
 
-        const digitRegExp = `[${this._digits.map(NumberFormat._escapeRegExp).join('')}]`,
-            parts = this._formatter.formatToParts(-10000000.1);
+        const digitRegExp = `[${this._digits.map(NumberFormat._escapeRegExp).join('')}]`;
 
-        this._minus = parts.find(part => part.type === 'minusSign').value || '-';
-        this._group = parts.find(part => part.type === 'group').value || '';
-        this._decimal = parts.find(part => part.type === 'decimal').value || '.';
-        this._minusIndex = 1;
-        this._numberIndex = 2;
-
-        let numberAdded = false;
-
-        const numberRegExp = (
-            this._group ?
+        const numberRegExp =
+            `${this._group ?
                 `(?:${digitRegExp}{1,3}${NumberFormat._escapeRegExp(this._group)})*${digitRegExp}{1,3}` :
                 `${digitRegExp}+`
-        ) + `(?:${NumberFormat._escapeRegExp(this._decimal)}${digitRegExp}+)?`,
-            regExp = parts.reduce((acc, part) => {
-                if (['literal', 'currency'].includes(part.type)) {
-                    acc += `(?:${NumberFormat._escapeRegExp(part.value)})?`;
-                } else if (part.type === 'minusSign') {
-                    if (numberAdded) {
-                        this._minusIndex = 2;
-                        this._numberIndex = 1;
-                    }
+            }(?:${NumberFormat._escapeRegExp(this._decimal)}${digitRegExp}+)?`;
 
-                    acc += `(${NumberFormat._escapeRegExp(part.value)})?`;
-                } else if (part.type === 'integer' && !numberAdded) {
-                    numberAdded = true;
+        let numberAdded = false;
+        const regExp = parts.reduce(
+            (acc, part) => {
+                switch (part.type) {
+                    case 'literal':
+                    case 'currency':
+                        acc += `(?:${NumberFormat._escapeRegExp(part.value)})`;
+                        if (!this._strict) {
+                            acc += '?';
+                        }
+                        break;
+                    case 'minusSign':
+                        acc += `(${NumberFormat._escapeRegExp(part.value)})?`;
+                        if (numberAdded) {
+                            this._minusIndex = 2;
+                            this._numberIndex = 1;
+                        }
+                        break;
+                    case 'integer':
+                        if (!numberAdded) {
+                            numberAdded = true;
 
-                    acc += `(${numberRegExp})`;
+                            acc += `(${numberRegExp})`;
+                        }
+                        break;
                 }
 
                 return acc;
-            }, '');
+            },
+            ''
+        );
 
         this._regExp = new RegExp(regExp);
     }
@@ -100,18 +127,19 @@ class NumberFormat {
         }
 
         return parseFloat(
-            `${(
-                match[this._minusIndex] ?
-                    '-' :
-                    ''
-            )}${match[this._numberIndex].replace(
+            `${match[this._minusIndex] ?
+                '-' :
+                ''
+            }${match[this._numberIndex].replace(
                 /./g,
                 match =>
                     this._digits.includes(match) ?
                         this._digits.indexOf(match) :
-                        match === this._decimal ?
-                            '.' :
-                            ''
+                        (
+                            match === this._decimal ?
+                                '.' :
+                                ''
+                        )
             )}`
         );
     }
