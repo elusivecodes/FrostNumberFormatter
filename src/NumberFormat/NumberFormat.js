@@ -23,7 +23,7 @@ class NumberFormat {
     constructor(locale, options) {
         this._formatter = new Intl.NumberFormat(locale, options);
 
-        this._strict = options && !!options.strictMode;
+        this._strict = false;
         this._minus = '-';
         this._group = '';
         this._decimal = '.';

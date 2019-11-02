@@ -52,7 +52,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       _classCallCheck(this, NumberFormat);
 
       this._formatter = new Intl.NumberFormat(locale, options);
-      this._strict = options && !!options.strictMode;
+      this._strict = false;
       this._minus = '-';
       this._group = '';
       this._decimal = '.';
