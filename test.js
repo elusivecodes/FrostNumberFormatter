@@ -18,6 +18,13 @@ describe('NumberFormat tests', function() {
             );
         });
 
+        it('works with locale numerals', function() {
+            assert.equal(
+                new NumberFormat('ar-AR').format(123456.789),
+                '١٢٣٬٤٥٦٫٧٨٩'
+            );
+        });
+
         it('works with currencies', function() {
             assert.equal(
                 new NumberFormat(
@@ -97,6 +104,34 @@ describe('NumberFormat tests', function() {
                     {
                         type: 'fraction',
                         value: '789'
+                    }
+                ]
+            );
+        });
+
+        it('works with locale numerals', function() {
+            assert.deepEqual(
+                new NumberFormat('ar-AR').formatToParts(123456.789),
+                [
+                    {
+                        type: 'integer',
+                        value: '١٢٣'
+                    },
+                    {
+                        type: 'group',
+                        value: '٬'
+                    },
+                    {
+                        type: 'integer',
+                        value: '٤٥٦'
+                    },
+                    {
+                        type: 'decimal',
+                        value: '٫'
+                    },
+                    {
+                        type: 'fraction',
+                        value: '٧٨٩'
                     }
                 ]
             );
@@ -194,6 +229,13 @@ describe('NumberFormat tests', function() {
         it('works with locales', function() {
             assert.equal(
                 new NumberFormat('de-DE').parse('123.456,789'),
+                123456.789
+            );
+        });
+
+        it('works with locale numerals', function() {
+            assert.equal(
+                new NumberFormat('ar-AR').parse('١٢٣٬٤٥٦٫٧٨٩'),
                 123456.789
             );
         });
