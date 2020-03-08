@@ -265,6 +265,18 @@ describe('NumberFormat tests', function() {
                 123456.78
             );
         });
+
+        it('throws error with invalid string', function() {
+            assert.throws(_ => {
+                new NumberFormat(
+                    'de-DE',
+                    {
+                        style: 'currency',
+                        currency: 'AUD'
+                    }
+                ).parse('INVALID');
+            });
+        });
     });
 
 });
