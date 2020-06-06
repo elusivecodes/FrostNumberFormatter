@@ -5,6 +5,7 @@
     "keywords": [
         "number",
         "currency",
+        "parse",
         "format",
         "localization",
         "international"
