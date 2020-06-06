@@ -30,7 +30,7 @@ npm install frostnumberformat
 In Node.js:
 
 ```javascript
-const Core = require('frostnumberformat');
+const NumberFormat = require('frostnumberformat');
 ```
 
 
