@@ -2,13 +2,35 @@
     "name": "frostnumberformat",
     "version": "1.0.0",
     "description": "FrostNumberFormat is a free, open-source number formatting library for JavaScript.",
-    "main": "build.js",
+    "keywords": [
+        "number",
+        "currency",
+        "format",
+        "localization",
+        "international"
+    ],
+    "homepage": "https://github.com/elusivecodes/FrostNumberFormat",
+    "bugs": {
+        "url": "https://github.com/elusivecodes/FrostNumberFormat/issues",
+        "email": "elusivecodes@gmail.com"
+    },
+    "main": "./dist/frost-numberformat.js",
+    "files": [
+        "/dist/frost-numberformat.js",
+        "/LICENSE",
+        "/README.md"
+    ],
     "scripts": {
-        "start": "node build.js",
+        "build": "node build.js",
         "test": "./node_modules/mocha/bin/mocha"
     },
-    "author": "Elusive",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/elusivecodes/FrostNumberFormat.git"
+    },
+    "author": "Elusive <elusivecodes@gmail.com>",
     "license": "MIT",
+    "private": false,
     "devDependencies": {
         "@babel/core": "^7.9.6",
         "@babel/preset-env": "^7.9.6",

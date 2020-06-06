@@ -15,8 +15,22 @@ It is a tiny (~1kb gzipped) and modern library, extending the native [Intl.Numbe
 
 ## Installation
 
+**In Browser**
+
 ```html
 <script type="text/javascript" src="/path/to/frost-numberformat.min.js"></script>
+```
+
+**Using NPM**
+
+```
+npm install frostnumberformat
+```
+
+In Node.js:
+
+```javascript
+const Core = require('frostnumberformat');
 ```
 
 
