@@ -24,7 +24,7 @@ It is a tiny (~1kb gzipped) and modern library, extending the native [Intl.Numbe
 **Using NPM**
 
 ```
-npm install frostnumberformat
+npm i frostnumberformat
 ```
 
 In Node.js:
