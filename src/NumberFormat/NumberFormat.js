@@ -169,7 +169,7 @@ class NumberFormat {
      * @returns {string} The escaped string.
      */
     static _escapeRegExp(string) {
-        return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$$&');
+        return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     }
 
 }
