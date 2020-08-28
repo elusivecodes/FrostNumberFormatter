@@ -1,7 +1,7 @@
 const assert = require('assert').strict;
 const NumberFormat = require('./dist/frost-numberformat.min');
 
-describe('NumberFormat tests', function() {
+describe('NumberFormat', function() {
 
     describe('#format', function() {
         it('formats a number to a string', function() {
