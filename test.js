@@ -6,21 +6,21 @@ describe('NumberFormat', function() {
     describe('#format', function() {
         it('formats a number to a string', function() {
             assert.strictEqual(
-                new NumberFormat('en-US').format(123456.789),
+                new NumberFormat('en-us').format(123456.789),
                 '123,456.789'
             );
         });
 
         it('works with locales', function() {
             assert.strictEqual(
-                new NumberFormat('de-DE').format(123456.789),
+                new NumberFormat('de-de').format(123456.789),
                 '123.456,789'
             );
         });
 
         it('works with locale numerals', function() {
             assert.strictEqual(
-                new NumberFormat('ar-AR').format(123456.789),
+                new NumberFormat('ar-eg').format(123456.789),
                 '١٢٣٬٤٥٦٫٧٨٩'
             );
         });
@@ -41,7 +41,7 @@ describe('NumberFormat', function() {
         it('works with currencies and locales', function() {
             assert.strictEqual(
                 new NumberFormat(
-                    'de-DE',
+                    'de-de',
                     {
                         style: 'currency',
                         currency: 'AUD'
@@ -55,7 +55,7 @@ describe('NumberFormat', function() {
     describe('#formatToParts', function() {
         it('returns an array of formatted parts', function() {
             assert.deepStrictEqual(
-                new NumberFormat('en-US').formatToParts(123456.789),
+                new NumberFormat('en-us').formatToParts(123456.789),
                 [
                     {
                         type: 'integer',
@@ -83,7 +83,7 @@ describe('NumberFormat', function() {
 
         it('works with locales', function() {
             assert.deepStrictEqual(
-                new NumberFormat('de-DE').formatToParts(123456.789),
+                new NumberFormat('de-de').formatToParts(123456.789),
                 [
                     {
                         type: 'integer',
@@ -111,7 +111,7 @@ describe('NumberFormat', function() {
 
         it('works with locale numerals', function() {
             assert.deepStrictEqual(
-                new NumberFormat('ar-AR').formatToParts(123456.789),
+                new NumberFormat('ar-eg').formatToParts(123456.789),
                 [
                     {
                         type: 'integer',
@@ -178,7 +178,7 @@ describe('NumberFormat', function() {
         it('works with currencies and locales', function() {
             assert.deepStrictEqual(
                 new NumberFormat(
-                    'de-DE',
+                    'de-de',
                     {
                         style: 'currency',
                         currency: 'AUD'
@@ -221,21 +221,21 @@ describe('NumberFormat', function() {
     describe('#parse', function() {
         it('parses a number from a string', function() {
             assert.strictEqual(
-                new NumberFormat('en-US').parse('123,456.789'),
+                new NumberFormat('en-us').parse('123,456.789'),
                 123456.789
             );
         });
 
         it('works with locales', function() {
             assert.strictEqual(
-                new NumberFormat('de-DE').parse('123.456,789'),
+                new NumberFormat('de-de').parse('123.456,789'),
                 123456.789
             );
         });
 
         it('works with locale numerals', function() {
             assert.strictEqual(
-                new NumberFormat('ar-AR').parse('١٢٣٬٤٥٦٫٧٨٩'),
+                new NumberFormat('ar-eg').parse('١٢٣٬٤٥٦٫٧٨٩'),
                 123456.789
             );
         });
@@ -256,7 +256,7 @@ describe('NumberFormat', function() {
         it('works with currencies and locales', function() {
             assert.strictEqual(
                 new NumberFormat(
-                    'de-DE',
+                    'de-de',
                     {
                         style: 'currency',
                         currency: 'AUD'
@@ -269,7 +269,7 @@ describe('NumberFormat', function() {
         it('throws error with invalid string', function() {
             assert.throws(_ => {
                 new NumberFormat(
-                    'de-DE',
+                    'de-de',
                     {
                         style: 'currency',
                         currency: 'AUD'

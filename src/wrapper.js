@@ -1,5 +1,5 @@
 /**
- * FrostNumberFormat v1.0.6
+ * FrostNumberFormat v1.0.7
  * https://github.com/elusivecodes/FrostNumberFormat
  */
 (function(global, factory) {
