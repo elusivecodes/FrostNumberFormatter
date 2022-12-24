@@ -1,33 +1,33 @@
-const assert = require('assert');
-const NumberFormat = require('./dist/frost-numberformat.min');
+import assert from 'node:assert/strict';
+import NumberFormatter from './src/index.js';
 
-describe('NumberFormat', function() {
+describe('NumberFormatter', function() {
 
     describe('#format', function() {
         it('formats a number to a string', function() {
             assert.strictEqual(
-                new NumberFormat('en-us').format(123456.789),
+                new NumberFormatter('en-us').format(123456.789),
                 '123,456.789'
             );
         });
 
         it('works with locales', function() {
             assert.strictEqual(
-                new NumberFormat('de-de').format(123456.789),
+                new NumberFormatter('de-de').format(123456.789),
                 '123.456,789'
             );
         });
 
         it('works with locale numerals', function() {
             assert.strictEqual(
-                new NumberFormat('ar-eg').format(123456.789),
+                new NumberFormatter('ar-eg').format(123456.789),
                 '١٢٣٬٤٥٦٫٧٨٩'
             );
         });
 
         it('works with currencies', function() {
             assert.strictEqual(
-                new NumberFormat(
+                new NumberFormatter(
                     'en-GB',
                     {
                         style: 'currency',
@@ -40,7 +40,7 @@ describe('NumberFormat', function() {
 
         it('works with currencies and locales', function() {
             assert.strictEqual(
-                new NumberFormat(
+                new NumberFormatter(
                     'de-de',
                     {
                         style: 'currency',
@@ -55,7 +55,7 @@ describe('NumberFormat', function() {
     describe('#formatToParts', function() {
         it('returns an array of formatted parts', function() {
             assert.deepStrictEqual(
-                new NumberFormat('en-us').formatToParts(123456.789),
+                new NumberFormatter('en-us').formatToParts(123456.789),
                 [
                     {
                         type: 'integer',
@@ -83,7 +83,7 @@ describe('NumberFormat', function() {
 
         it('works with locales', function() {
             assert.deepStrictEqual(
-                new NumberFormat('de-de').formatToParts(123456.789),
+                new NumberFormatter('de-de').formatToParts(123456.789),
                 [
                     {
                         type: 'integer',
@@ -111,7 +111,7 @@ describe('NumberFormat', function() {
 
         it('works with locale numerals', function() {
             assert.deepStrictEqual(
-                new NumberFormat('ar-eg').formatToParts(123456.789),
+                new NumberFormatter('ar-eg').formatToParts(123456.789),
                 [
                     {
                         type: 'integer',
@@ -139,7 +139,7 @@ describe('NumberFormat', function() {
 
         it('works with currencies', function() {
             assert.deepStrictEqual(
-                new NumberFormat(
+                new NumberFormatter(
                     'en-GB',
                     {
                         style: 'currency',
@@ -177,7 +177,7 @@ describe('NumberFormat', function() {
 
         it('works with currencies and locales', function() {
             assert.deepStrictEqual(
-                new NumberFormat(
+                new NumberFormatter(
                     'de-de',
                     {
                         style: 'currency',
@@ -221,28 +221,28 @@ describe('NumberFormat', function() {
     describe('#parse', function() {
         it('parses a number from a string', function() {
             assert.strictEqual(
-                new NumberFormat('en-us').parse('123,456.789'),
+                new NumberFormatter('en-us').parse('123,456.789'),
                 123456.789
             );
         });
 
         it('works with locales', function() {
             assert.strictEqual(
-                new NumberFormat('de-de').parse('123.456,789'),
+                new NumberFormatter('de-de').parse('123.456,789'),
                 123456.789
             );
         });
 
         it('works with locale numerals', function() {
             assert.strictEqual(
-                new NumberFormat('ar-eg').parse('١٢٣٬٤٥٦٫٧٨٩'),
+                new NumberFormatter('ar-eg').parse('١٢٣٬٤٥٦٫٧٨٩'),
                 123456.789
             );
         });
 
         it('works with currencies', function() {
             assert.strictEqual(
-                new NumberFormat(
+                new NumberFormatter(
                     'en-GB',
                     {
                         style: 'currency',
@@ -255,7 +255,7 @@ describe('NumberFormat', function() {
 
         it('works with currencies and locales', function() {
             assert.strictEqual(
-                new NumberFormat(
+                new NumberFormatter(
                     'de-de',
                     {
                         style: 'currency',
@@ -268,7 +268,7 @@ describe('NumberFormat', function() {
 
         it('throws error with invalid string', function() {
             assert.throws(_ => {
-                new NumberFormat(
+                new NumberFormatter(
                     'de-de',
                     {
                         style: 'currency',

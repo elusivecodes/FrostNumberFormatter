@@ -1,6 +1,6 @@
-# FrostNumberFormat
+# FrostNumberFormatter
 
-**FrostNumberFormat** is a free, open-source number formatting library for *JavaScript*.
+**FrostNumberFormatter** is a free, open-source number formatting library for *JavaScript*.
 
 It is a tiny (~1kb gzipped) and modern library, extending the native [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) class, with additional capabilities for parsing formatted number strings into numbers.
 
@@ -18,19 +18,19 @@ It is a tiny (~1kb gzipped) and modern library, extending the native [Intl.Numbe
 **In Browser**
 
 ```html
-<script type="text/javascript" src="/path/to/frost-numberformat.min.js"></script>
+<script type="text/javascript" src="/path/to/frost-numberformatter.min.js"></script>
 ```
 
 **Using NPM**
 
 ```
-npm i frostnumberformat
+npm i @fr0st/numberformatter
 ```
 
 In Node.js:
 
 ```javascript
-const NumberFormat = require('frostnumberformat');
+import NumberFormatter from '@fr0st/numberformatter';
 ```
 
 
@@ -44,7 +44,7 @@ As the class internally utilizes the native [Intl.NumberFormat](https://develope
 For a full list of supported options, see the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) documentation.
 
 ```javascript
-const formatter = new NumberFormat(locale, options);
+const formatter = new NumberFormatter(locale, options);
 ```
 
 
