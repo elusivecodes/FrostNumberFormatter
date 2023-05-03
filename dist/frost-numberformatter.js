@@ -20,13 +20,6 @@
      * @class
      */
     class NumberFormatter {
-        #formatter;
-        #regExp;
-        #minusIndex = 1;
-        #numberIndex = 2;
-        group = '';
-        decimal = '.';
-
         /**
          * New NumberFormatter constructor.
          * @param {string|string[]} [locale] The locale(s) to use for formatting.
@@ -43,9 +36,14 @@
          * @param {number} [options.maximumSignificantDigits] The maximum number of significant digits to use.
          */
         constructor(locale, options) {
-            this.#formatter = new Intl.NumberFormat(locale, options);
+            this.group = '';
+            this.decimal = '.';
+            this._minusIndex = 1;
+            this._numberIndex = 2;
 
-            const parts = this.#formatter.formatToParts(-10000000.1);
+            this._formatter = new Intl.NumberFormat(locale, options);
+
+            const parts = this._formatter.formatToParts(-10000000.1);
             for (const part of parts) {
                 switch (part.type) {
                     case 'group':
@@ -82,8 +80,8 @@
                         break;
                     case 'minusSign':
                         if (numberAdded) {
-                            this.#minusIndex = 2;
-                            this.#numberIndex = 1;
+                            this._minusIndex = 2;
+                            this._numberIndex = 1;
                         }
 
                         regExp += `(${escapeRegExp(part.value)})?`;
@@ -98,7 +96,7 @@
                 }
             }
 
-            this.#regExp = new RegExp(regExp);
+            this._regExp = new RegExp(regExp);
         }
 
         /**
@@ -107,7 +105,7 @@
          * @return {string} The formatted number string.
          */
         format(number) {
-            return this.#formatter.format(number);
+            return this._formatter.format(number);
         }
 
         /**
@@ -116,7 +114,7 @@
          * @return {object[]} The formatted number, as an array of parts.
          */
         formatToParts(number) {
-            return this.#formatter.formatToParts(number);
+            return this._formatter.formatToParts(number);
         }
 
         /**
@@ -125,7 +123,7 @@
          * @return {number} The parsed number.
          */
         parse(numberString) {
-            const match = this.#regExp.exec(numberString);
+            const match = this._regExp.exec(numberString);
 
             if (!match) {
                 throw new Error('Invalid number string');
@@ -133,11 +131,11 @@
 
             let parsedString = '';
 
-            if (match[this.#minusIndex]) {
+            if (match[this._minusIndex]) {
                 parsedString += '-';
             }
 
-            parsedString += match[this.#numberIndex].replace(
+            parsedString += match[this._numberIndex].replace(
                 /./g,
                 (match) => (
                     this.digits.includes(match) ?
@@ -158,7 +156,7 @@
          * @return {object} The computed locale and formatting options.
          */
         resolvedOptions() {
-            return this.#formatter.resolvedOptions();
+            return this._formatter.resolvedOptions();
         }
 
         /**
