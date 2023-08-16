@@ -1,6 +1,6 @@
 {
     "name": "@fr0st/numberformatter",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "description": "FrostNumberFormatter is a free, open-source number formatting library for JavaScript.",
     "keywords": [
         "number",
