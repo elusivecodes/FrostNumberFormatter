@@ -1,6 +1,6 @@
 {
     "name": "@fr0st/numberformatter",
-    "version": "2.0.9",
+    "version": "2.0.10",
     "description": "FrostNumberFormatter is a free, open-source number formatting library for JavaScript.",
     "keywords": [
         "number",
@@ -38,10 +38,10 @@
     "license": "MIT",
     "private": false,
     "devDependencies": {
-        "@fr0st/eslint-config": "^1.0.2",
-        "eslint": "^9.5.0",
-        "mocha": "^10.4.0",
-        "rollup": "^4.18.0",
-        "terser": "^5.31.1"
+        "@fr0st/eslint-config": "^1.0.3",
+        "eslint": "^9.26.0",
+        "mocha": "^11.2.2",
+        "rollup": "^4.40.2",
+        "terser": "^5.39.0"
     }
 }
